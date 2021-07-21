@@ -1,0 +1,26 @@
+﻿@model IEnumerable<AnimalViewModel>
+@{ 
+    ViewData["Title"] = "Animals";
+}
+<h1>Список тварин</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Зверь</th>
+            <th scope="col">Дата рождения</th>
+            <th scope="col">Фото</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <td> @item.Name</td>
+            <td> @item.Birthday</td>
+            <td> @item.Image</td>
+        </tr>
+        }
+    </tbody>
+</table>
