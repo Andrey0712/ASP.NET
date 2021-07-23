@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAppSite.Domain;
+using WebAppSite.Domain.Entities.Catalog;
 using WebAppSite.Models;
 
 namespace WebAppSite.Controllers
@@ -47,5 +49,34 @@ namespace WebAppSite.Controllers
 
             return View(model);
         }
+
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(AnimalCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            DateTime dt = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
+            Animal animal = new Animal
+            {
+                Name = model.Name,
+                DateBirth = dt,
+                //DateBirth = model.BirthDay,
+                Image = model.Image,
+                Prise = model.Price,
+                DateCreate = DateTime.Now
+            };
+            _context.Animals.Add(animal);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

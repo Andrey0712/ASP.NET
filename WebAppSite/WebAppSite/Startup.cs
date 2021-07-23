@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAppSite.Domain;
 using WebAppSite.Domain.Entities.Identity;
+using WebAppSite.Models;
 
 namespace WebAppSite
 {
@@ -40,7 +43,8 @@ namespace WebAppSite
                .AddEntityFrameworkStores<AppEFContext>()
                .AddDefaultTokenProviders();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddFluentValidation();
+            services.AddTransient<IValidator<AnimalCreateViewModel>, AnimalCreateValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
