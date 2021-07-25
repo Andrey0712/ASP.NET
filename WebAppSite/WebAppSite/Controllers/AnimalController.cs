@@ -78,6 +78,7 @@ namespace WebAppSite.Controllers
             return RedirectToAction("Index");
         }
         #endregion
+
         #region Animal Edit
         [HttpGet]
         
@@ -105,6 +106,7 @@ namespace WebAppSite.Controllers
                 return View(model);
             
             {
+                
                 var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//редактируем полученный обьект
                 edit.Name = model.Name;
                 edit.DateBirth = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
@@ -120,32 +122,38 @@ namespace WebAppSite.Controllers
 
         #region Animal Delete
         [HttpGet]
-
-        public IActionResult Del(long id)
+        
+        public IActionResult Delete(long id)
         {
-            var del = _context.Animals.FirstOrDefault(x => x.Id == id);
-            
-                return View(new AnimalCreateViewModel()
+           
+            var del = _context.Animals.Find(id);
+            if (del != null)
+            {
+                return View(new AnimalViewModel()
                 {
+                    Id = del.Id,
                     Name = del.Name,
-                    Price = del.Prise,
-                    BirthDay = del.DateBirth.ToString(),
+                    Birthday = del.DateBirth,
                     Image = del.Image
                 });
-           
+            }
+            return NotFound();
         }
 
         [HttpPost]
         public IActionResult Delete(long id)
         {
-            var del = _context.Animals.FirstOrDefault(x => x.Id == id);
-           
-                _context.Animals.Remove(del);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
             
+            var del = _context.Animals.Find(id);
+            if (del != null)
+            {
+                _context.Animals.Remove(del);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+                 }
+            return NotFound();
         }
-       
+
 
 
 
