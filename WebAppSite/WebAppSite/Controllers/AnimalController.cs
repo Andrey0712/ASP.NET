@@ -140,8 +140,8 @@ namespace WebAppSite.Controllers
             return NotFound();
         }
 
-        [HttpPost]
-        public IActionResult Delete(long id)
+        [HttpPost, ActionName("Delete")]
+        public IActionResult Del(long id)
         {
             
             var del = _context.Animals.Find(id);
