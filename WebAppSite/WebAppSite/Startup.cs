@@ -32,6 +32,13 @@ namespace WebAppSite
             services.AddDbContext<AppEFContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddAuthentication("Cookie")
+                .AddCookie("Cookie",config=>
+                {
+                    config.LoginPath = "/Autorize/Login";
+                });
+            services.AddAuthorization();
+
             services.AddIdentity<AppUser, AppRole>(options => {
                 options.Stores.MaxLengthForKeys = 128;
                 options.Password.RequireDigit = false;
@@ -61,7 +68,7 @@ namespace WebAppSite
             app.UseStaticFiles();
 
             app.UseRouting();//маршрутизация
-
+            app.UseAuthentication();
             app.UseAuthorization();//авторизация
 
             app.UseEndpoints(endpoints =>//конечная точка протокол, порт,контролер, метод

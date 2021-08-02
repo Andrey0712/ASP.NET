@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model WebAppSite.Controllers.LoginViewModel
+<h1> Login   </h1>
+<a asp-controller="Home" asp-action="Index">Home</></a>
+<form asp-controller="Autorize" asp-action="IndexLogin" method="post">
+    <input hidden asp-for="ReturnURL" />
+    <div>
+        <label>UserName </label>
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label>Password </label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <p>
+        <button> type="submit">log in </button>
+    </p>
+</form>
