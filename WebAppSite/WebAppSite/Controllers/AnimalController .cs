@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,39 +14,42 @@ namespace WebAppSite.Controllers
     public class AnimalController : Controller
     {
         private readonly AppEFContext _context;
-        public AnimalController(AppEFContext context)
+        private readonly IMapper _mapper;
+        public AnimalController(AppEFContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
-            List<AnimalViewModel> model =
+            var model = _context.Animals.Select(x => _mapper.Map<AnimalViewModel>(x)).ToList();
+            //List<AnimalViewModel> model =
 
 
-                //    new List<AnimalViewModel>();
-                //model.Add(new AnimalViewModel
-                //{
-                //    Id=1,
-                //    Birthday=DateTime.Now,
-                //    Name="Енот-паласкун",
-                //    Image="1.jpg"
-                //});
-                //model.Add(new AnimalViewModel
-                //{
-                //    Id = 2,
-                //    Birthday = DateTime.Now.AddDays(-5),
-                //    Name = "Кот-рыжий",
-                //    Image = "2.jpg"
-                //});
+            //    //    new List<AnimalViewModel>();
+            //    //model.Add(new AnimalViewModel
+            //    //{
+            //    //    Id=1,
+            //    //    Birthday=DateTime.Now,
+            //    //    Name="Енот-паласкун",
+            //    //    Image="1.jpg"
+            //    //});
+            //    //model.Add(new AnimalViewModel
+            //    //{
+            //    //    Id = 2,
+            //    //    Birthday = DateTime.Now.AddDays(-5),
+            //    //    Name = "Кот-рыжий",
+            //    //    Image = "2.jpg"
+            //    //});
 
-                
-                _context.Animals.Select(x => new AnimalViewModel
-                {
-                    Id = x.Id,
-                    Birthday = x.DateBirth,
-                    Image = x.Image,
-                    Name = x.Name
-                }).ToList();
+
+            //    _context.Animals.Select(x => new AnimalViewModel
+            //    {
+            //        Id = x.Id,
+            //        Birthday = x.DateBirth,
+            //        Image = x.Image,
+            //        Name = x.Name
+            //    }).ToList();
 
             return View(model);
         }
@@ -81,14 +85,14 @@ namespace WebAppSite.Controllers
 
         #region Animal Edit
         [HttpGet]
-        
+
         public IActionResult Edit(long id)
         {
             var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//вытягиваем с БД обект и заполняем форму его данными
-            
+
             return View(new AnimalCreateViewModel()
             {
-               
+
                 Name = edit.Name,
                 Price = edit.Prise,
                 BirthDay = edit.DateBirth.ToString(),
@@ -99,14 +103,14 @@ namespace WebAppSite.Controllers
         }
 
         [HttpPost]
-        
-        public IActionResult Edit(AnimalCreateViewModel model,long id)
+
+        public IActionResult Edit(AnimalCreateViewModel model, long id)
         {
             if (!ModelState.IsValid)
                 return View(model);
-            
+
             {
-                
+
                 var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//редактируем полученный обьект
                 edit.Name = model.Name;
                 edit.DateBirth = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
@@ -122,10 +126,10 @@ namespace WebAppSite.Controllers
 
         #region Animal Delete
         [HttpGet]
-        
+
         public IActionResult Delete(long id)
         {
-           
+
             var del = _context.Animals.Find(id);
             if (del != null)
             {
@@ -143,14 +147,14 @@ namespace WebAppSite.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult Del(long id)
         {
-            
+
             var del = _context.Animals.Find(id);
             if (del != null)
             {
                 _context.Animals.Remove(del);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-                 }
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return NotFound();
         }
 
