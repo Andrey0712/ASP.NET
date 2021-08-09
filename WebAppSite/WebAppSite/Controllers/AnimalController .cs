@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using WebAppSite.Domain;
 using WebAppSite.Domain.Entities.Catalog;
@@ -147,41 +148,52 @@ namespace WebAppSite.Controllers
         #endregion
 
         #region Animal Delete
-        [HttpGet]
+        //[HttpGet]
 
+        //public IActionResult Delete(long id)
+        //{
+
+        //    var del = _context.Animals.Find(id);
+        //    if (del != null)
+        //    {
+        //        return View(new AnimalViewModel()
+        //        {
+        //            Id = del.Id,
+        //            Name = del.Name,
+        //            Birthday = del.DateBirth,
+        //            Image = del.Image
+        //        });
+        //    }
+        //    return NotFound();
+        //}
+
+        //[HttpPost, ActionName("Delete")]
+        //public IActionResult Del(long id)
+        //{
+
+        //    var del = _context.Animals.Find(id);
+        //    if (del != null)
+        //    {
+        //        _context.Animals.Remove(del);
+        //        _context.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return NotFound();
+        //}
+
+        [HttpPost]
         public IActionResult Delete(long id)
         {
-
-            var del = _context.Animals.Find(id);
-            if (del != null)
+            Thread.Sleep(2000);
+            var item = _context.Animals.SingleOrDefault(x => x.Id == id);
+            if (item != null)
             {
-                return View(new AnimalViewModel()
-                {
-                    Id = del.Id,
-                    Name = del.Name,
-                    Birthday = del.DateBirth,
-                    Image = del.Image
-                });
-            }
-            return NotFound();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult Del(long id)
-        {
-
-            var del = _context.Animals.Find(id);
-            if (del != null)
-            {
-                _context.Animals.Remove(del);
+                //_context.Remove(item);
+                _context.Animals.Remove(item);
                 _context.SaveChanges();
-                return RedirectToAction("Index");
             }
-            return NotFound();
+            return Ok();
         }
-
-
-
 
 
         #endregion

@@ -2,7 +2,8 @@
 @{
     ViewData["Title"] = "Animals";
 }
-<h1>Список тварин</h1><br>
+<h1>Список тварин</h1>
+<br>
 <a asp-action="Create" class="btn btn-success">Додати</a>
 <br>
 <br>
@@ -24,11 +25,19 @@
                 <th scope="row">@item.Id</th>
                 <td> @item.Name</td>
                 <td> @item.Birthday.ToLongDateString()</td>
-                <td> <img src="@item.Image" width ="100"alt="Foto"/>
-                @item.Image</td>
                 <td>
-                    <a asp-action="Edit" class="btn btn-warning"   asp-route-id="@item.Id">Редагувати</a>&nbsp;&nbsp;
-                    <a asp-action="Delete" class="btn btn-danger "   asp-route-id="@item.Id">Видалити</a>
+                    <img src="@item.Image" width="100" alt="Foto" />
+                    @item.Image
+                </td>
+                <td class="align-middle text-center" style="font-size:24px">
+
+                    @*<a href="#"  class=" text-danger"><i class="fa fa-pencil-square-o " aria-hidden="true"></i></a>*@
+                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Редагувати</a>&nbsp;&nbsp;
+                    <a href="#" class="text-danger text-decoration-none"
+                       data-delete-animal data-id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    @*<a asp-action="Delete" class="btn btn-danger " asp-route-id="@item.Id">Видалити</a>*@
 
 
                 </td>
@@ -38,4 +47,48 @@
 </table>
 
 
+<div class="modal" tabindex="-1" id="modalDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Удалить зверюшку</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Уверены ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Не уверен</button>
+                <button type="button" class="btn btn-primary" id="btnDeleteAnimal">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Scripts
+{
+    <script src="~/lib/axios/axios.js"></script>
+    <script>
+        $(function () {
+            var deleteItem;
+            $("[data-delete-animal]").on("click", function (e) {
+                deleteItem = $(this).closest('a'); //елемент, який я видаляю
+                e.preventDefault();
+                $("#modalDelete").modal("show");
+                console.log(deleteItem.attr("data-id"));
+            });
+            $("#btnDeleteAnimal").on("click", function () {
+                var url = `/animal/delete/${deleteItem.attr("data-id")}`;
+                axios.post(url)
+                    .then(function (result) {
+                        deleteItem.closest("tr").remove();
+                        $("#modalDelete").modal("hide");
+                        //console.log(result);
+                    });
+            });
+        });
+    </script>
+
+}
