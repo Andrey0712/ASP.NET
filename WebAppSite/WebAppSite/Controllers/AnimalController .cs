@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bogus;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,28 @@ namespace WebAppSite.Controllers
         {
             _context = context;
             _mapper = mapper;
+
+
+            //GenerationAnimals();
         }
+        private void GenerationAnimals()
+            {
+                int n = 10;
+            var endDate = DateTime.Now;
+            var startDate = new DateTime(endDate.Year - 2, endDate.Month, endDate.Day);
+            var faker = new Faker<Animal>("uk").RuleFor(x => x.Name, f => f.Person.FullName)
+                .RuleFor(x => x.DateBirth, f => f.Date.Between(startDate, endDate))
+            .RuleFor(x => x.Image, f => f.Image.PicsumUrl())
+            .RuleFor(x=>x.Prise,f=>Decimal.Parse(f.Commerce.Price(100M,500M)))
+            .RuleFor(x=>x.DateCreate,DateTime.Now);
+            for (int i = 0; i < n; i++)
+            {
+                var animal = faker.Generate();
+                _context.Animals.Add(animal);
+                _context.SaveChanges();
+            }
+
+            }
         public IActionResult Index()
         {
             var model = _context.Animals.Select(x => _mapper.Map<AnimalViewModel>(x)).ToList();
