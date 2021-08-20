@@ -77,16 +77,29 @@
                 deleteItem = $(this).closest('a'); //елемент, який я видаляю
                 e.preventDefault();
                 $("#modalDelete").modal("show");
-                console.log(deleteItem.attr("data-id"));
+                //console.log(deleteItem.attr("data-id"));
             });
             $("#btnDeleteAnimal").on("click", function () {
                 var url = `/animal/delete/${deleteItem.attr("data-id")}`;
+                //axios.post(url)
+                //    .then(function (result) {
+                //        deleteItem.closest("tr").remove();
+                //        $("#modalDelete").modal("hide");
+                //        //console.log(result);
+                //    });
                 axios.post(url)
                     .then(function (result) {
-                        deleteItem.closest("tr").remove();
-                        $("#modalDelete").modal("hide");
-                        //console.log(result);
+                        deletecat.closest("tr").remove();
+                       
+                                               
+                    }).then(function (result) {
+                        setTimeout(() => {
+                            $("#modalDelete").modal("hide");
+                        }, 3000)
+                    }).catch(function (error) {
+                        console.log(error);
                     });
+            });
             });
         });
     </script>
