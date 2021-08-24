@@ -10,8 +10,8 @@ using WebAppSite.Domain;
 namespace WebAppSite.Domain.Migrations
 {
     [DbContext(typeof(AppEFContext))]
-    [Migration("20210723090507_Add tbl animals")]
-    partial class Addtblanimals
+    [Migration("20210824081409_Add tbl")]
+    partial class Addtbl
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

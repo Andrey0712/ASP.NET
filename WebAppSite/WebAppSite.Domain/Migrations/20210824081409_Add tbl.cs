@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebAppSite.Domain.Migrations
 {
-    public partial class Addidentity : Migration
+    public partial class Addtbl : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,6 +47,25 @@ namespace WebAppSite.Domain.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblAnimals",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Prise = table.Column<decimal>(type: "numeric", nullable: false),
+                    DateBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DateCreate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DateModify = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DateDelete = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblAnimals", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -209,6 +228,9 @@ namespace WebAppSite.Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "tblAnimals");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
