@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,17 +86,36 @@ namespace WebAppSite.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(AnimalCreateViewModel model)
+        public async Task<IActionResult> Create(AnimalCreateViewModel model)
         {
+
             if (!ModelState.IsValid)
                 return View(model);
+            string fileName = "";
+            if (model.Image != null)
+            {
+
+                //var filePath = Path.GetTempFileName();
+                var ext = Path.GetExtension(model.Image.FileName);//разширение
+
+                fileName = Path.GetRandomFileName() + ext;
+                var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
+
+                var filePath = Path.Combine(dir, fileName);
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+            }
+
             DateTime dt = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
             Animal animal = new Animal
             {
                 Name = model.Name,
                 DateBirth = dt,
                 //DateBirth = model.BirthDay,
-                Image = model.Image,
+                Image = fileName,
                 Prise = model.Price,
                 DateCreate = DateTime.Now
             };
@@ -119,7 +139,7 @@ namespace WebAppSite.Controllers
                 Name = edit.Name,
                 Price = edit.Prise,
                 BirthDay = edit.DateBirth.ToString(),
-                Image = edit.Image
+                //Image = edit.Image
             });
 
 
@@ -137,7 +157,7 @@ namespace WebAppSite.Controllers
                 var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//редактируем полученный обьект
                 edit.Name = model.Name;
                 edit.DateBirth = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
-                edit.Image = model.Image;
+                //edit.Image = model.Image;
                 edit.Prise = model.Price;
                 _context.SaveChanges();
 

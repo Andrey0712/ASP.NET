@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace WebAppSite.Models
         [Display(Name = "Дата народження")]
         public string BirthDay { get; set; }
         [Display(Name = "Фото")]
-        public string Image { get; set; }
+        public IFormFile  Image { get; set; }
         [Display(Name = "Ціна тварини")]
         public decimal Price { get; set; }
     }
