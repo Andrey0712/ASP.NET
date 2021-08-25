@@ -41,4 +41,21 @@ namespace WebAppSite.Models
         }
     }
     #endregion
+
+    #region Search Animal
+
+    public class SearchHomeIndexModel
+    {
+        public string Name { get; set; }
+    }
+
+    public class HomeIndexModel//разширяющая модель
+    {
+        public int Page { get; set; }
+        public int PageCount { get; set; }
+        public List<AnimalViewModel> Animals { get; set; }
+        public SearchHomeIndexModel Search { get; set; }
+    }
+
+    #endregion
 }

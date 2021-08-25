@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AnimalViewModel>
+﻿@model HomeIndexModel
 @{
     ViewData["Title"] = "Animals";
 }
@@ -7,44 +7,11 @@
 <a asp-action="Create" class="btn btn-success">Додати</a>
 <br>
 <br>
+@await Html.PartialAsync("_Search", Model.Search)
 <br>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Зверь</th>
-            <th scope="col">Дата рождения</th>
-            <th scope="col">Фото</th>
-            <th scope="col">Опциї</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th scope="row">@item.Id</th>
-                <td> @item.Name</td>
-                <td> @item.Birthday.ToLongDateString()</td>
-                <td>
-                    <img src="/images/@item.Image" width="100" alt="Foto" />
-                    @item.Image
-                </td>
-                <td class="align-middle text-center" style="font-size:24px">
-
-                    @*<a href="#"  class=" text-danger"><i class="fa fa-pencil-square-o " aria-hidden="true"></i></a>*@
-                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Редагувати</a>&nbsp;&nbsp;
-                    <a href="#" class="text-danger text-decoration-none"
-                       data-delete-animal data-id="@item.Id">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </a>
-                    @*<a asp-action="Delete" class="btn btn-danger " asp-route-id="@item.Id">Видалити</a>*@
-
-
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@*Передаємо дані на іншу сторінку, яка є частичною вюшкою,
+    Дана вюшка має бути у поточній папці, або у папці Shared*@
+@await Html.PartialAsync("_List", Model.Animals)
 
 
 <div class="modal" tabindex="-1" id="modalDelete">
