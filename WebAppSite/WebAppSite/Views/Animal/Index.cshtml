@@ -13,6 +13,7 @@
     Дана вюшка має бути у поточній папці, або у папці Shared*@
 @await Html.PartialAsync("_List", Model.Animals)
 
+@await Html.PartialAsync("_Pagination", Model)
 
 <div class="modal" tabindex="-1" id="modalDelete">
     <div class="modal-dialog">

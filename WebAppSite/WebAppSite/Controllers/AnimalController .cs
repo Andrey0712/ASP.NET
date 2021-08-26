@@ -46,7 +46,7 @@ namespace WebAppSite.Controllers
             }
         public IActionResult Index(SearchHomeIndexModel search, int page = 1)
         {
-            //int showItems = 10;
+            int showItems = 10;//к-во записей на 1 стр
             var query = _context.Animals.AsQueryable();
             if (!string.IsNullOrEmpty(search.Name))
             {
@@ -55,20 +55,20 @@ namespace WebAppSite.Controllers
             HomeIndexModel model = new HomeIndexModel();
 
             //кількість записів, які ми знайшли загально
-            //int countItems = query.Count();
-            //var pageCount = (int)Math.Ceiling(countItems / (double)showItems);
-            //if (pageCount == 0) pageCount = 1;
+            int countItems = query.Count();
+            var pageCount = (int)Math.Ceiling(countItems / (double)showItems);//к-во стр, округленых к большему числу
+            if (pageCount == 0) pageCount = 1;
 
-            //int skipItems = (page - 1) * showItems;
+            int skipItems = (page - 1) * showItems;//ского записи показывать в зависимости от стр
 
-            //query = query.Skip(skipItems).Take(showItems);
+            query = query.Skip(skipItems).Take(showItems);//сколько пропустить и сколько взять
 
             model.Animals = query
                 .Select(x => _mapper.Map<AnimalViewModel>(x))
                 .ToList();
             model.Search = search;
-            //model.Page = page;
-            //model.PageCount = pageCount;
+            model.Page = page;//номер поточноъ стр
+            model.PageCount = pageCount;//к-во стр
 
             return View(model);
             //List<AnimalViewModel> model =

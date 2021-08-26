@@ -1,0 +1,25 @@
+﻿@model HomeIndexModel
+    <div class="row">
+        <div class="offset-md-3 col-md-6">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Попередня</a></li>
+
+                @for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    string active = i == Model.Page ? "active" : "";//показать активную стр
+                    <li class="page-item @active">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="@i"
+                           asp-route-name="@Model.Search.Name">@i</a>
+                    </li>
+                }
+
+                @*<li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+                <li class="page-item"><a class="page-link" href="#">Наступна</a></li>
+            </ul>
+        </div>
+    </div>
