@@ -46,13 +46,15 @@ namespace WebAppSite.Controllers
             }
         public IActionResult Index(SearchHomeIndexModel search, int page = 1)
         {
-            int showItems = 10;//к-во записей на 1 стр
+            HomeIndexModel model = new HomeIndexModel();
+
+            int showItems = 5;//к-во записей на 1 стр
             var query = _context.Animals.AsQueryable();
             if (!string.IsNullOrEmpty(search.Name))
             {
                 query = query.Where(x => x.Name.Contains(search.Name));//поис по имени
             }
-            HomeIndexModel model = new HomeIndexModel();
+            
 
             //кількість записів, які ми знайшли загально
             int countItems = query.Count();
@@ -99,7 +101,7 @@ namespace WebAppSite.Controllers
             //        Name = x.Name
             //    }).ToList();
 
-            return View(model);
+            //return View(model);
         }
 
         #region Animal Create
