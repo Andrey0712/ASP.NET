@@ -53,6 +53,7 @@ namespace WebAppSite.Models
     public class HomeIndexModel//разширяющая модель
     {
         public int Page { get; set; }
+        public int AddNextItems { get; set; }
         public int PageCount { get; set; }
         
         public List<AnimalViewModel> Animals { get; set; }

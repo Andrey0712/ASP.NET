@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Bogus;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,11 +20,12 @@ namespace WebAppSite.Controllers
     {
         private readonly AppEFContext _context;
         private readonly IMapper _mapper;
-        public AnimalController(AppEFContext context,IMapper mapper)
+        private IHostEnvironment _host;
+        public AnimalController(AppEFContext context,IMapper mapper, IHostEnvironment host)
         {
             _context = context;
             _mapper = mapper;
-
+            _host = host;
 
             //GenerationAnimals();
         }
@@ -44,11 +47,11 @@ namespace WebAppSite.Controllers
             }
 
             }
-        public IActionResult Index(SearchHomeIndexModel search, int page = 1)
+        public IActionResult Index(SearchHomeIndexModel search, int page = 1, int nextItems=5)
         {
             HomeIndexModel model = new HomeIndexModel();
 
-            int showItems = 5;//к-во записей на 1 стр
+            int showItems = nextItems;//к-во записей на 1 стр
             var query = _context.Animals.AsQueryable();
             if (!string.IsNullOrEmpty(search.Name))
             {
@@ -70,6 +73,7 @@ namespace WebAppSite.Controllers
                 .ToList();
             model.Search = search;
             model.Page = page;//номер поточноъ стр
+            model.AddNextItems = nextItems;
             model.PageCount = pageCount;//к-во стр
 
             return View(model);
@@ -158,22 +162,34 @@ namespace WebAppSite.Controllers
         public IActionResult Edit(long id)
         {
             var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//вытягиваем с БД обект и заполняем форму его данными
-
-            return View(new AnimalCreateViewModel()
+AnimalCreateViewModel animal = new AnimalCreateViewModel();
+            if (edit.Image != null)
             {
+                
+                var nameEditImage = Path.GetFileName(edit.Image);
+                var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
 
-                Name = edit.Name,
-                Price = edit.Prise,
-                BirthDay = edit.DateBirth.ToString(),
-                //Image = edit.Image
-            });
+                var nameEditImagePath = Path.Combine(dir, nameEditImage);
+                using (var stream = System.IO.File.OpenRead($"{nameEditImagePath}"))
+                {
+                    var newImage = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
 
-
+                    
+                        animal.Name = edit.Name;
+                    animal.Price = edit.Prise;
+                    animal.BirthDay = edit.DateBirth.ToString();
+                    animal.Image = newImage;
+                   
+                }
+            }
+            return View(animal);
         }
 
         [HttpPost]
 
-        public IActionResult Edit(AnimalCreateViewModel model, long id)
+
+
+        public async Task<IActionResult> Edit(AnimalCreateViewModel model, long id)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -181,13 +197,44 @@ namespace WebAppSite.Controllers
             {
 
                 var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//редактируем полученный обьект
+
+
+
                 edit.Name = model.Name;
                 edit.DateBirth = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
                 //edit.Image = model.Image;
-                edit.Prise = model.Price;
-                _context.SaveChanges();
 
-            }
+                string fileName = " ";
+
+
+                if (model.Image != null)
+                {
+                    var imageForDell = Path.Combine(_host.ContentRootPath, "images", edit.Image);
+
+                    var ext = Path.GetExtension(model.Image.FileName);//разширение
+
+                    fileName = Path.GetRandomFileName() + ext;
+                    var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
+
+                    var filePath = Path.Combine(dir, fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await model.Image.CopyToAsync(stream);
+                    }
+                    if (System.IO.File.Exists(imageForDell))
+                    {
+                        System.IO.File.Delete(imageForDell);
+                    }
+
+                }
+
+
+                edit.Image = fileName;
+                edit.Prise = model.Price;
+                
+
+            }_context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -227,20 +274,40 @@ namespace WebAppSite.Controllers
         //    return NotFound();
         //}
 
+        //[HttpPost]
+        //public IActionResult Delete(long id)
+        //{
+        //    Thread.Sleep(1000);
+        //    var item = _context.Animals.SingleOrDefault(x => x.Id == id);
+        //    if (item != null)
+        //    {
+        //        //_context.Remove(item);
+        //        _context.Animals.Remove(item);
+        //        _context.SaveChanges();
+        //    }
+        //    return Ok();
+        //}
+
         [HttpPost]
         public IActionResult Delete(long id)
         {
-            Thread.Sleep(2000);
-            var item = _context.Animals.SingleOrDefault(x => x.Id == id);
-            if (item != null)
+            Thread.Sleep(1000);
+               var item = _context.Animals.SingleOrDefault(x => x.Id == id);
+               if (item != null)
             {
-                //_context.Remove(item);
-                _context.Animals.Remove(item);
-                _context.SaveChanges();
-            }
-            return Ok();
-        }
+                var imageForDell = Path.Combine(_host.ContentRootPath, "images", item.Image);
 
+                if (System.IO.File.Exists(imageForDell))
+                {
+                    System.IO.File.Delete(imageForDell);
+                }
+
+                _context.Animals.Remove(item);
+                      _context.SaveChanges();
+                return Ok();
+            }
+            return NotFound();
+        }
 
         #endregion
     }
