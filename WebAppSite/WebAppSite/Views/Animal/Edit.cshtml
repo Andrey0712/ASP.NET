@@ -26,10 +26,10 @@
                 <label asp-for="Image" class="control-label"></label>
                 @*<input asp-for="Image" class="form-control" />*@
 
-            <div class="input-group mb-3">
-                <input asp-for="Image" type="file" class="form-control">
-                <label class="input-group-text" for="Image">Upload</label>
-            </div>
+                <div class="input-group mb-3">
+                    <input asp-for="Image" type="file" class="form-control">
+                    <label class="input-group-text" for="Image">Upload</label>
+                </div>
 
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
@@ -51,4 +51,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+@section Styles {
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
 }

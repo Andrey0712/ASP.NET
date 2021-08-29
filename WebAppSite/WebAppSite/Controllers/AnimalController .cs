@@ -3,6 +3,7 @@ using Bogus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,12 +21,12 @@ namespace WebAppSite.Controllers
     {
         private readonly AppEFContext _context;
         private readonly IMapper _mapper;
-        private IHostEnvironment _host;
-        public AnimalController(AppEFContext context,IMapper mapper, IHostEnvironment host)
+        private readonly IHostEnvironment _hosting;
+        public AnimalController(AppEFContext context,IMapper mapper, IHostEnvironment hosting)
         {
             _context = context;
             _mapper = mapper;
-            _host = host;
+            _hosting = hosting;
 
             //GenerationAnimals();
         }
@@ -47,11 +48,11 @@ namespace WebAppSite.Controllers
             }
 
             }
-        public IActionResult Index(SearchHomeIndexModel search, int page = 1, int nextItems=5)
+        public IActionResult Index(SearchHomeIndexModel search, string Name, int page = 1)
         {
             HomeIndexModel model = new HomeIndexModel();
 
-            int showItems = nextItems;//к-во записей на 1 стр
+            int showItems = 5;//к-во записей на 1 стр
             var query = _context.Animals.AsQueryable();
             if (!string.IsNullOrEmpty(search.Name))
             {
@@ -73,7 +74,6 @@ namespace WebAppSite.Controllers
                 .ToList();
             model.Search = search;
             model.Page = page;//номер поточноъ стр
-            model.AddNextItems = nextItems;
             model.PageCount = pageCount;//к-во стр
 
             return View(model);
@@ -108,6 +108,7 @@ namespace WebAppSite.Controllers
             //return View(model);
         }
 
+       
         #region Animal Create
         [HttpGet]
         public IActionResult Create()
@@ -203,17 +204,25 @@ AnimalCreateViewModel animal = new AnimalCreateViewModel();
                 edit.Name = model.Name;
                 edit.DateBirth = DateTime.Parse(model.BirthDay, new CultureInfo("uk-UA"));
                 //edit.Image = model.Image;
+                edit.Prise = model.Price;
 
                 string fileName = " ";
 
-
                 if (model.Image != null)
                 {
-                    var imageForDell = Path.Combine(_host.ContentRootPath, "images", edit.Image);
+                    //ContentRootPath содержит файлы содержимого приложения.https://coderoad.ru/
+                    var imageForDell = Path.Combine(_hosting.ContentRootPath, "images", edit.Image);//собираем полный путь для удаления старой фотки
+
+                    if (System.IO.File.Exists(imageForDell))
+                    {
+                        System.IO.File.Delete(imageForDell);
+                    }
 
                     var ext = Path.GetExtension(model.Image.FileName);//разширение
 
                     fileName = Path.GetRandomFileName() + ext;
+
+
                     var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
 
                     var filePath = Path.Combine(dir, fileName);
@@ -222,19 +231,14 @@ AnimalCreateViewModel animal = new AnimalCreateViewModel();
                     {
                         await model.Image.CopyToAsync(stream);
                     }
-                    if (System.IO.File.Exists(imageForDell))
-                    {
-                        System.IO.File.Delete(imageForDell);
-                    }
 
+                    edit.Image = fileName;
                 }
 
+                _context.SaveChanges();
 
-                edit.Image = fileName;
-                edit.Prise = model.Price;
-                
+            }
 
-            }_context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -295,7 +299,7 @@ AnimalCreateViewModel animal = new AnimalCreateViewModel();
                var item = _context.Animals.SingleOrDefault(x => x.Id == id);
                if (item != null)
             {
-                var imageForDell = Path.Combine(_host.ContentRootPath, "images", item.Image);
+                var imageForDell = Path.Combine(_hosting.ContentRootPath, "images", item.Image);//ContentRootPath содержит файлы содержимого приложения.https://coderoad.ru/
 
                 if (System.IO.File.Exists(imageForDell))
                 {

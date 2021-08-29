@@ -15,7 +15,124 @@
                 </li>
             }
 
-            @for (int i = 1; i <= Model.PageCount; i++)
+            @if (Model.PageCount > 7)
+            {
+                //якщо номер вибраної сторінки менше 4,
+                if (Model.Page < 5)
+                {
+                    //то виводимо 1 2 3 4 ... ост. сторінка
+                    for (int i = 1; i <=5; i++)
+                    {
+                        string active = i == Model.Page ? "active" : "";
+                        <li class="page-item @active">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-controller="Animal"
+                               asp-route-page="@i"
+                               asp-route-name="@Model.Search.Name">@i</a>
+                        </li>
+                    }
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="5"
+                           asp-route-name="@Model.Search.Name">...</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="@Model.PageCount"
+                           asp-route-name="@Model.Search.Name">@Model.PageCount</a>
+                    </li>
+                    //---------------------------------------кінець
+                }
+                else //якщо номер вибраної сторінки більше 4
+                {
+                    //спочатку виводимо 1 ...
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="1"
+                           asp-route-name="@Model.Search.Name">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="@(Model.Page - 2)"
+                           asp-route-name="@Model.Search.Name">...</a>
+                    </li>
+
+                    //потім перевіряємо чи номер вибраної сторінки більше 4 і менше заг к-сті -3
+                    //якщо так, то виводимо три сторінки підряд
+                    if (Model.Page >4 && Model.Page < Model.PageCount - 3)
+                    {
+                        for (int i = Model.Page - 1; i <= Model.Page + 1; i++)
+                        {
+                            string active = i == Model.Page ? "active" : "";
+                            <li class="page-item @active">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-controller="Animal"
+                                   asp-route-page="@i"
+                                   asp-route-name="@Model.Search.Name">@i</a>
+                            </li>
+                        }
+                        //потім виводимо ... і останню сторінку
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-controller="Animal"
+                               asp-route-page="@(Model.Page + 2)"
+                               asp-route-name="@Model.Search.Name">...</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-controller="Animal"
+                               asp-route-page="@Model.PageCount"
+                               asp-route-name="@Model.Search.Name">@Model.PageCount</a>
+                        </li>
+                    }
+                    //якщо ж вибрана сторінка більше ніж заг к-сть -4
+                    else if (Model.Page > Model.PageCount - 4)
+                    {
+                        //то виводимо підряд 5 ост сторінок
+
+                        for (int i = Model.PageCount - 4; i <= Model.PageCount; i++)
+                        {
+                            string active = i == Model.Page ? "active" : "";
+                            <li class="page-item @active">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-controller="Animal"
+                                   asp-route-page="@i"
+                                   asp-route-name="@Model.Search.Name">@i</a>
+                            </li>
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                for (int i = 1; i <= Model.PageCount; i++)
+                {
+                    string active = i == Model.Page ? "active" : "";
+                    <li class="page-item @active">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-controller="Animal"
+                           asp-route-page="@i"
+                           asp-route-name="@Model.Search.Name">@i</a>
+                    </li>
+                }
+            }
+
+            @*@for (int i = 1; i <= Model.PageCount; i++)
             {
                 if (Model.Page <= 5 && i <= 7)
                 {
@@ -49,11 +166,11 @@
 
                     }
                 }
-            }
+            }*@
 
             @*<li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>*@
+        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>*@
             @*<li class="page-item"><a class="page-link" href="#">Наступна</a></li>*@
 
             @if (Model.Page < Model.PageCount)         //кнопка "Наступна"
@@ -68,20 +185,22 @@
                 </li>
             }
         </ul>
-        <div class="row">
+        @*<div class="row">
             <div class="offset-md-3 col-md-6">
                 <ul class="pagination">
+
+                   
                     <li class="page-item">
                         <a class="page-link"
                            asp-action="Index"
                            asp-controller="Animal"
-                           asp-route-nextItem="@(Model.AddNextItems + 5)"
+                           asp-route-page="@(Model.Page)"
                            asp-route-name="@Model.Search.Name">Add next 5 items</a>
                     </li>
 
                 </ul>
 
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
