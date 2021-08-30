@@ -163,7 +163,7 @@ namespace WebAppSite.Controllers
         public IActionResult Edit(long id)
         {
             var edit = _context.Animals.FirstOrDefault(x => x.Id == id);//вытягиваем с БД обект и заполняем форму его данными
-AnimalCreateViewModel animal = new AnimalCreateViewModel();
+            AnimalCreateViewModel animal = new AnimalCreateViewModel();
             if (edit.Image != null)
             {
                 
@@ -187,9 +187,7 @@ AnimalCreateViewModel animal = new AnimalCreateViewModel();
         }
 
         [HttpPost]
-
-
-
+       
         public async Task<IActionResult> Edit(AnimalCreateViewModel model, long id)
         {
             if (!ModelState.IsValid)

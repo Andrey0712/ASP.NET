@@ -18,7 +18,7 @@ namespace WebAppSite.Models
     #region Animal Create
     public class AnimalCreateViewModel
     {
-        [Display(Name = "Назва тварини")]//датаанатация
+        [Display(Name = "Назва тварини")]//дата анатация
         public string Name { get; set; }
         [Display(Name = "Дата народження")]
         public string BirthDay { get; set; }
@@ -28,6 +28,7 @@ namespace WebAppSite.Models
         public decimal Price { get; set; }
     }
 
+    
     public class AnimalCreateValidator : AbstractValidator<AnimalCreateViewModel>
     {
         public AnimalCreateValidator()
