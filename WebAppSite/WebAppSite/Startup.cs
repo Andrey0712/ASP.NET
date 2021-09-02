@@ -81,9 +81,9 @@ namespace WebAppSite
             });
 
             app.UseRouting();//маршрутизация
-            app.UseAuthentication();
+             app.UseAuthentication();
             app.UseAuthorization();//авторизация
-
+           
 
             app.UseEndpoints(endpoints =>//конечная точка протокол, порт,контролер, метод
             {

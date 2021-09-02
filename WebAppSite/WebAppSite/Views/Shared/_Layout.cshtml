@@ -30,10 +30,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Animal" asp-action="Index">Animals</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Autorize" asp-action="IndexAvtoriz">Avtorization</a>
-                        </li>
+                        @*<li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Autorize" asp-action="IndexAvtoriz">Avtorization</a>
+            </li>*@
                     </ul>
+                    @await Html.PartialAsync("_LoginInfo")
                 </div>
             </div>
         </nav>
