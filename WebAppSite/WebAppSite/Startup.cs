@@ -81,6 +81,7 @@ namespace WebAppSite
             });
 
             app.UseRouting();//маршрутизация
+
              app.UseAuthentication();
             app.UseAuthorization();//авторизация
            
@@ -90,6 +91,16 @@ namespace WebAppSite
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");//маршрут
+
+
+                endpoints.MapAreaControllerRoute(
+                    name: "admin",
+                    areaName: "admin",
+                    //pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");//маршрут
+        pattern: "admin/{controller=Dashboards}/{action=Dashboard_1}/{id?}");
+
+
+                
             });
         }
     }
