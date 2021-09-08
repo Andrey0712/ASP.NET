@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -30,6 +31,9 @@ namespace WebAppSite.Models
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Invalid password")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Обов'язкове поле")]
+        public IFormFile Image { get; set; }
     }
 
     public class UserNavbarInfoViewModel

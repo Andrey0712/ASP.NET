@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAppSite.Domain;
+using WebAppSite.Domain.Entities;
 using WebAppSite.Domain.Entities.Identity;
 using WebAppSite.Models;
 
@@ -69,6 +70,7 @@ namespace WebAppSite
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
+            app.Seeder();
 
             var dir = Path.Combine(Directory.GetCurrentDirectory(), "images");
             if (!Directory.Exists(dir))
@@ -97,7 +99,7 @@ namespace WebAppSite
                     name: "admin",
                     areaName: "admin",
                     //pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");//маршрут
-        pattern: "admin/{controller=Dashboards}/{action=Dashboard_1}/{id?}");
+        pattern: "admin/{controller=Dashboards}/{action=Dashboard_0}/{id?}");
 
 
                 

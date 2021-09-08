@@ -1,0 +1,321 @@
+﻿@{
+    ViewData["Title"] = "Dashboard v.0";
+}
+<div class="text-center text-dark ">
+    <br />
+    <h1><b> Панель управління користувачами </b></h1>
+    <br />
+</div>
+<div>
+    <a asp-action="Create" asp-area="admin" asp-controller="Dashboards" class="btn btn-primary px-5">Create</a>
+</div>
+
+<hr />
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th data-hide="phone">Name</th>
+                        <th data-hide="phone">E-mail</th>
+                        <th class="text-right">Role</th>
+                        <th class="text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+
+                        <td class="text-right">
+                            @*<div>
+                                <a href="Edit/@user.UserId"
+                                   class="text-info">
+                                    <i class="fa fa-pencil-square-o" style="font-size: 20px" aria-hidden="true"></i>
+                                </a>
+                                <a href="Delete/@user.UserId"
+                                   class="text-danger">
+                                    <i class="fa fa-trash-o" style="font-size: 20px" aria-hidden="true"></i>
+                                </a>
+                            </div>*@
+                            <div class="btn-group">
+                                @*<a href="Create" asp-area="admin" class="text-success"
+            asp-action="Create"
+            asp-controller="Ecommerce">Create</a>*@
+                                
+                                <a class="btn btn-warning" href="Edit/@user.UserId">Edit</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-danger " href="Delete/@user.UserId">Delete</a>
+
+                            </div>
+                        </td>
+                        @*<td class="text-right">
+                            <div class="btn-group">
+                                &nbsp;&nbsp;&nbsp;
+                                <a class="text-success"
+                                   href="Edit/@user.UserId">Edit</a>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="Delete/@user.UserId"
+                                   class="text-success">Deleted</a>
+
+                            </div>
+                        </td>*@
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">
+                            <ul class="pagination pull-right"></ul>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="small-chat-box fadeInRight animated">
+
+    <div class="heading" draggable="true">
+        <small class="chat-date float-right">
+            02.19.2015
+        </small>
+        Small chat
+    </div>
+
+    <div class="content">
+
+        <div class="left">
+            <div class="author-name">
+                Monica Jackson <small class="chat-date">
+                    10:02 am
+                </small>
+            </div>
+            <div class="chat-message active">
+                Lorem Ipsum is simply dummy text input.
+            </div>
+
+        </div>
+        <div class="right">
+            <div class="author-name">
+                Mick Smith
+                <small class="chat-date">
+                    11:24 am
+                </small>
+            </div>
+            <div class="chat-message">
+                Lorem Ipsum is simpl.
+            </div>
+        </div>
+        <div class="left">
+            <div class="author-name">
+                Alice Novak
+                <small class="chat-date">
+                    08:45 pm
+                </small>
+            </div>
+            <div class="chat-message active">
+                Check this stock char.
+            </div>
+        </div>
+        <div class="right">
+            <div class="author-name">
+                Anna Lamson
+                <small class="chat-date">
+                    11:24 am
+                </small>
+            </div>
+            <div class="chat-message">
+                The standard chunk of Lorem Ipsum
+            </div>
+        </div>
+        <div class="left">
+            <div class="author-name">
+                Mick Lane
+                <small class="chat-date">
+                    08:45 pm
+                </small>
+            </div>
+            <div class="chat-message active">
+                I belive that. Lorem Ipsum is simply dummy text.
+            </div>
+        </div>
+
+
+    </div>
+    <div class="form-chat">
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control"> <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">
+                    Send
+                </button>
+            </span>
+        </div>
+    </div>
+
+</div>
+<div id="small-chat">
+
+    <span class="badge badge-warning float-right">5</span>
+    <a href="#" class="open-small-chat">
+        <i class="fa fa-comments"></i>
+
+    </a>
+</div>
+
+@*@section StylesAwesome{
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    }*@
+
+
+@section Scripts {
+
+    <environment names="Development">
+        <script src="~/template/lib/flot/jquery.flot.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.resize.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.pie.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.time.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.spline.js"></script>
+        <script src="~/template/lib/sparkline/jquery.sparkline.min.js"></script>
+        <script src="~/template/lib/chartJs/Chart.min.js"></script>
+        <script src="~/template/lib/peity/jquery.peity.js"></script>
+
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/template/lib/flot/jquery.flot.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.resize.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.pie.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.time.js"></script>
+        <script src="~/template/lib/flot/jquery.flot.spline.js"></script>
+        <script src="~/template/lib/sparkline/jquery.sparkline.min.js"></script>
+        <script src="~/template/lib/chartJs/Chart.min.js"></script>
+        <script src="~/template/lib/peity/jquery.peity.min.js"></script>
+    </environment>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".bar_dashboard").peity("bar", {
+                fill: ["#1ab394", "#d7d7d7"],
+                width: 100
+            })
+
+            $("#sparkline8").sparkline([5, 6, 7, 2, 0, 4, 2, 4, 5, 7, 2, 4, 12, 14, 4, 2, 14, 12, 7], {
+                type: 'bar',
+                barWidth: 8,
+                height: '150px',
+                barColor: '#1ab394',
+                negBarColor: '#c6c6c6'
+            });
+
+            var updatingChart = $(".updating-chart").peity("line", { fill: '#1ab394', stroke: '#169c81', width: 64 })
+
+            setInterval(function () {
+                var random = Math.round(Math.random() * 10)
+                var values = updatingChart.text().split(",")
+                values.shift()
+                values.push(random)
+
+                updatingChart
+                    .text(values.join(","))
+                    .change()
+            }, 1000);
+
+            var data1 = [
+                [0, 4], [1, 8], [2, 5], [3, 10], [4, 4], [5, 16], [6, 5], [7, 11], [8, 6], [9, 11], [10, 30], [11, 10], [12, 13], [13, 4], [14, 3], [15, 3], [16, 6]
+            ];
+            var data2 = [
+                [0, 1], [1, 0], [2, 2], [3, 0], [4, 1], [5, 3], [6, 1], [7, 5], [8, 2], [9, 3], [10, 2], [11, 1], [12, 0], [13, 2], [14, 8], [15, 0], [16, 0]
+            ];
+            $("#flot-dashboard-chart").length && $.plot($("#flot-dashboard-chart"), [
+                data1, data2
+            ],
+                {
+                    series: {
+                        lines: {
+                            show: false,
+                            fill: true
+                        },
+                        splines: {
+                            show: true,
+                            tension: 0.4,
+                            lineWidth: 1,
+                            fill: 0.4
+                        },
+                        points: {
+                            radius: 0,
+                            show: true
+                        },
+                        shadowSize: 2
+                    },
+                    grid: {
+                        hoverable: true,
+                        clickable: true,
+                        tickColor: "#d5d5d5",
+                        borderWidth: 1,
+                        color: '#d5d5d5'
+                    },
+                    colors: ["#1ab394", "#464f88"],
+                    xaxis: {
+                    },
+                    yaxis: {
+                        ticks: 4
+                    },
+                    tooltip: false
+                }
+            );
+
+            var doughnutData = {
+                labels: ["App", "Software", "Laptop"],
+                datasets: [{
+                    data: [300, 50, 100],
+                    backgroundColor: ["#a3e1d4", "#dedede", "#9CC3DA"]
+                }]
+            };
+
+
+            var doughnutOptions = {
+                responsive: false,
+                legend: {
+                    display: false
+                }
+            };
+
+
+            var ctx4 = document.getElementById("doughnutChart").getContext("2d");
+            new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
+
+            var doughnutData = {
+                labels: ["App", "Software", "Laptop"],
+                datasets: [{
+                    data: [70, 27, 85],
+                    backgroundColor: ["#a3e1d4", "#dedede", "#9CC3DA"]
+                }]
+            };
+
+
+            var doughnutOptions = {
+                responsive: false,
+                legend: {
+                    display: false
+                }
+            };
+
+
+            var ctx4 = document.getElementById("doughnutChart2").getContext("2d");
+            new Chart(ctx4, { type: 'doughnut', data: doughnutData, options: doughnutOptions });
+
+        });
+    </script>
+}

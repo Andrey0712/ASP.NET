@@ -1,0 +1,59 @@
+﻿
+@model WebAppSite.Areas.Admin.Models.UserWithRoles
+@using WebAppSite.Domain.Entities.Identity
+@{
+    ViewData["Title"] = "Редагування даних про користувача";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label" asp-area="admin"></label>
+                <div>
+                    <img id="profilePicture" src="/images/@Model.Image" style="width: 150px; height: 150px;">
+                </div>
+                <input asp-for="Image" type="file"
+                       class="form-control"
+                       onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])">
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="RoleBefore" value="@Model.Role" />
+                <input list="RoleList" asp-for="Role">
+                <datalist id="RoleList">
+                    @foreach (var role in ViewBag.Roles as List<string>)
+                    {
+                        <option value="@role"></option>
+                    }
+                </datalist>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Зберегти зміни" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
